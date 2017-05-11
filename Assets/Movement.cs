@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class Movement : MonoBehaviour {
 	public float m_direction = 1f;
 	public float m_speed = 9f;
-	public float m_jumpPower = 1f;
+	//public float m_jumpPower = 1f;
 	public Text repCountText;
 
 	private bool isGrounded = true;
@@ -17,12 +18,26 @@ public class Movement : MonoBehaviour {
 
 	private int repCounter;
 
+	public Transform plank;
+
+	private int plankCount = 0;
+	private int plankDirection = 1;
+
+	private float currentPlankMaxHeight = 0;
+	private int heightDifferenceBetweenPlanks = 4;
+
+
+
+
 
 	// Use this for initialization
 	void Start () {
 		m_rigidBody = GetComponent<Rigidbody2D> ();
 		repCounter = 0;
 		setCountText ();
+		createPlank ();
+		createPlank ();
+
 	}
 		
 	
@@ -43,8 +58,13 @@ public class Movement : MonoBehaviour {
 			jump ();
 		}
 
+		if (m_rigidBody.position.y > currentPlankMaxHeight-heightDifferenceBetweenPlanks*2) {
+			createPlank ();
+		}
+
 		if (isOverThreshold && Mathf.Abs(Input.acceleration.y) < .5f) {
 			print (Input.acceleration.y);
+
 			repCounter += 1;
 			isOverThreshold = false;
 			setCountText ();
@@ -58,10 +78,19 @@ public class Movement : MonoBehaviour {
 			//print(Input.acceleration.z);
 
 			jump ();
+			//Instantiate(Plank, Vector3 (1, 0, 0), Quaternion.identity);
 		}
 
 			
 
+	}
+
+	void createPlank() {
+		Instantiate(plank, new Vector2(2.29f*plankDirection, currentPlankMaxHeight), Quaternion.identity); 
+		plankCount++;
+		plankDirection *= -1;
+		currentPlankMaxHeight += heightDifferenceBetweenPlanks;
+		plank.name = "plank"+ plankCount;
 	}
 
 	void setCountText() {
@@ -77,7 +106,6 @@ public class Movement : MonoBehaviour {
 
 	private void Move()
 	{
-		// Adjust the position of the tank based on the player's input.
 		//Vector2 movement = transform.forward*1* m_speed * Time.deltaTime;
 		Vector2 movement;
 		if (!isGrounded) 
@@ -95,7 +123,7 @@ public class Movement : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) {
-		print (coll);
+		//print (coll);
 		if (coll.gameObject.tag == "RightWall" || coll.gameObject.tag == "LeftWall")
 			m_direction *= -1;
 		if (coll.gameObject.tag == "Ground"){
