@@ -16,6 +16,7 @@ public class Movement : MonoBehaviour {
 	private Rigidbody2D m_rigidBody;
 	private Collision2D m_collision;
 
+
 	private int repCounter;
 
 	public Transform plank;
@@ -50,13 +51,20 @@ public class Movement : MonoBehaviour {
 		//print(Input.acceleration.y);
 		if (Mathf.Abs(Input.acceleration.y) > .9f && isGrounded)
 		{
+			
+			if (!isOverThreshold) {
+				jump ();
+
+			}
 			isOverThreshold = true;
+
+				
+
 			//print("JUMPING! x,y,z is: ");
 			//print (Input.acceleration.x);
-			print(Input.acceleration.y);
+//			print(Input.acceleration.y);
 			//print(Input.acceleration.z);
 
-			jump ();
 		}
 
 		if (m_rigidBody.position.y > currentPlankMaxHeight-heightDifferenceBetweenPlanks*2) {
