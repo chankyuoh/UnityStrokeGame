@@ -56,6 +56,9 @@
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\TestReporter.cs" />
      <Compile Include="Assets\makeWall.cs" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
+ <Reference Include="Facebook.Unity.Settings">
+ <HintPath>/Users/brianzhan/UnityStrokeGame/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>

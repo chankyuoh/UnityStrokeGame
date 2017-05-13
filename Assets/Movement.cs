@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Movement : MonoBehaviour {
 	public float m_direction = 1f;
 	public float m_speed = 9f;
-	//public float m_jumpPower = 1f;
+	public int m_jumpPower = 400;
 	public Text repCountText;
 
 	private bool isGrounded = true;
@@ -19,6 +19,7 @@ public class Movement : MonoBehaviour {
 	private int repCounter;
 
 	public Transform plank;
+	public Transform fullLengthPlank;
 
 	private int plankCount = 0;
 	private int plankDirection = 1;
@@ -36,7 +37,7 @@ public class Movement : MonoBehaviour {
 		repCounter = 0;
 		setCountText ();
 		createPlank ();
-		createPlank ();
+//		createPlank ();
 
 	}
 		
@@ -47,7 +48,7 @@ public class Movement : MonoBehaviour {
 		Move ();
 
 		//print(Input.acceleration.y);
-		if (Mathf.Abs(Input.acceleration.y) > .9f)
+		if (Mathf.Abs(Input.acceleration.y) > .9f && isGrounded)
 		{
 			isOverThreshold = true;
 			//print("JUMPING! x,y,z is: ");
@@ -60,6 +61,7 @@ public class Movement : MonoBehaviour {
 
 		if (m_rigidBody.position.y > currentPlankMaxHeight-heightDifferenceBetweenPlanks*2) {
 			createPlank ();
+			fillHole ();
 		}
 
 		if (isOverThreshold && Mathf.Abs(Input.acceleration.y) < .5f) {
@@ -71,7 +73,7 @@ public class Movement : MonoBehaviour {
 		}
 
 
-		if (Input.GetKeyDown (KeyCode.Space))
+		if (Input.GetKeyDown (KeyCode.Space) && isGrounded)
 		{
 			//print("JUMPING! x,y,z is: ");
 			//print (Input.acceleration.x);
@@ -82,15 +84,21 @@ public class Movement : MonoBehaviour {
 		}
 
 			
-
 	}
+	void fillHole() {
+		Instantiate (fullLengthPlank, new Vector2 (0, currentPlankMaxHeight - heightDifferenceBetweenPlanks*4), Quaternion.identity);
+		plank.name = "filledPlank" + plankCount;
+	}
+
+
+
 
 	void createPlank() {
 		Instantiate(plank, new Vector2(2.29f*plankDirection, currentPlankMaxHeight), Quaternion.identity); 
 		plankCount++;
 		plankDirection *= -1;
 		currentPlankMaxHeight += heightDifferenceBetweenPlanks;
-		plank.name = "plank"+ plankCount;
+//		plank.name = "plankNum"+ plankCount;
 	}
 
 	void setCountText() {
@@ -99,7 +107,7 @@ public class Movement : MonoBehaviour {
 		
 
 	private void jump() {
-		GetComponent<Rigidbody2D>().AddForce(new Vector2(0,100), ForceMode2D.Impulse);
+		GetComponent<Rigidbody2D>().AddForce(new Vector2(0,m_jumpPower), ForceMode2D.Impulse);
 		isGrounded = false;
 	}
 
